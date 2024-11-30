@@ -97,7 +97,7 @@
     <h1>身份证 OCR 识别</h1>
 
     <!-- 文件上传表单 -->
-    <form action="{{ route('ocr.process') }}" method="POST" enctype="multipart/form-data">
+    <form id="ocrForm" action="{{ route('ocr.process') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <!-- 显示的按钮标签 -->
@@ -112,6 +112,9 @@
     <!-- 图像预览区域 -->
     <img id="image-preview" class="image-preview" src="" alt="Image preview" style="display:none;">
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // 更新按钮文本为选中的文件名
@@ -138,6 +141,55 @@
             reader.readAsDataURL(file);
         }
     }
+
+    // 监听表单提交事件
+    $('#ocrForm').on('submit', function(event) {
+        event.preventDefault(); // 防止表单自动提交
+
+        var formData = new FormData(this); // 获取表单数据
+
+        // 使用 Ajax 提交表单
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false, // 不处理数据
+            contentType: false, // 不设置 content-type
+            success: function(response) {
+                // 成功时弹出 OCR 识别文本
+                if (response.text) {
+                    Swal.fire({
+                        title: 'OCR 识别成功',
+                        html: formatOCRResult(response.text),
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({
+                        title: '识别失败',
+                        text: '未能识别文本，请重试。',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                // 错误时弹出提示
+                Swal.fire({
+                    title: '错误',
+                    text: '发生错误: ' + error,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    });
+
+    // 格式化 OCR 结果文本，替换 \n 为 <br> 实现换行
+    function formatOCRResult(text) {
+        return text.replace(/\n/g, '<br>');
+    }
+
 </script>
 
 </body>
