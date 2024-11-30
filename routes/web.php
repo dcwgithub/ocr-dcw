@@ -22,7 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::controller(\App\Http\Controllers\OcrController::class)->group(function () {
+Route::controller(\App\Http\Controllers\OcrController::class)->middleware(['auth'])->group(function () {
     Route::get('ocr/upload', 'showUploadForm')->name('ocr.upload');
     Route::post('ocr/process', 'ocr')->name('ocr.process');
 });
