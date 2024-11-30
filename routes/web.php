@@ -26,3 +26,7 @@ Route::controller(\App\Http\Controllers\OcrController::class)->group(function ()
     Route::get('ocr/upload', 'showUploadForm')->name('ocr.upload');
     Route::post('ocr/process', 'ocr')->name('ocr.process');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

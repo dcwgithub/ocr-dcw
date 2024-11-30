@@ -84,21 +84,20 @@
 </head>
 <body>
 
-<!-- 语言选择框 -->
-<div class="language-select">
-    <label for="lang">选择语言：</label>
-    <select name="lang" id="lang">
-        <option value="chi_sim">简体中文</option>
-        <option value="eng">英语</option>
-    </select>
-</div>
-
 <div class="container">
     <h1>身份证 OCR 识别</h1>
 
     <!-- 文件上传表单 -->
     <form id="ocrForm" action="{{ route('ocr.process') }}" method="POST" enctype="multipart/form-data">
         @csrf
+
+        <div class="language-select">
+            <label for="lang">选择语言：</label>
+            <select name="lang" id="lang">
+                <option value="chi_sim">简体中文</option>
+                <option value="eng">英语</option>
+            </select>
+        </div>
 
         <!-- 显示的按钮标签 -->
         <label for="image" class="file-label">选择身份证图片</label>
